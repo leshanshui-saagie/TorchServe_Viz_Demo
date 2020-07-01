@@ -18,10 +18,10 @@ application = Flask(__name__)
 @application.route('/')
 def index():
     logger.info('Visited index page')
-    health = os.popen("curl -k https://research-workspace.a3.saagie.io/app/c5d028a6-713e-4d8f-a871-46f86367c0c8/8080/ping/").read().strip()
-    models = os.popen("curl -k https://research-workspace.a3.saagie.io/app/c5d028a6-713e-4d8f-a871-46f86367c0c8/8081/models/").read().strip()
-    health = health.replace('\n', '').replace(' ', '').split('"')[3]
-    models = models.replace('\n', '').replace(' ', '')
+    states_url = "https://research-workspace.a3.saagie.io/app/c5d028a6-713e-4d8f-a871-46f86367c0c8/8080/ping/"
+    health = requests.get(state_url, verify=False)._content.decode("utf-8").split('"')[3]
+    models_url = "https://research-workspace.a3.saagie.io/app/c5d028a6-713e-4d8f-a871-46f86367c0c8/8081/models/"
+    models = requests.get(models_url, verify=False)._content.decode("utf-8").replace('\n', '').replace(' ', '')
     model_names = ' \n '.join([d['modelName'] for d in json.loads(s=models)['models']])
     return render_template('viz.html',**locals())
 
